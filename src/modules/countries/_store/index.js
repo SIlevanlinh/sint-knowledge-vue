@@ -3,7 +3,8 @@ import getters from './getters'
 import mutations from './mutations'
 
 const state = {
-    score: 0
+    score: 0,
+    response: {}
 }
 
 export default {
