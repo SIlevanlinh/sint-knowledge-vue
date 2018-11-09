@@ -1,6 +1,12 @@
 import mutationTypes from './mutation-types'
 
-const getters = {}
+const score = state => state.score
+const currentCountry = state => state.currentCountry
+
+const getters = {
+    score,
+    currentCountry
+}
 
 for (let key in mutationTypes) {
     if (mutationTypes.hasOwnProperty(key)) {

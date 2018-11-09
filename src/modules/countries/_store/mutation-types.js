@@ -27,5 +27,8 @@ const createAsyncMutation = (type) => ({
 })
 
 export default {
-  COUNTRY_GET_ALL: createAsyncMutation('COUNTRY_GET_ALL')
+  COUNTRY_GET_ALL: createAsyncMutation('COUNTRY_GET_ALL'),
+  SHUFFLE_COUNTRIES: 'SHUFFLE_COUNTRIES',
+  INCREASE_SCORE: 'INCREASE_SCORE',
+  INCREASE_CURRENT_COUNTRY: 'INCREASE_CURRENT_COUNTRY'
 }

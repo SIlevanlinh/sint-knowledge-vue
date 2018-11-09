@@ -4,6 +4,7 @@ import mutations from './mutations'
 
 const state = {
     score: 0,
+    currentCountry: -1,
     response: {}
 }
 

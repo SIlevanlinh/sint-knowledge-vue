@@ -1,31 +1,31 @@
 <template>
     <div class="hello">
         <h1>Wavin' Flags <b-badge>10</b-badge></h1>
-        <b-container class="bv-example-row" style="background-color: #99cc00; padding: 50px">
+        <b-container class="bv-example-row" style="background-color: #99cc00; padding: 50px" v-if="puzzle != null">
             <b-row>
                 <b-col>
-                    <b-img src="https://restcountries.eu/data/aus.svg" fluid alt="Responsive image" />
+                    <b-img :src=puzzle.answerCountry.flag fluid alt="Responsive image" />
                     <b-row>
                         <b-col>
                             <b-button variant="outline-success">
-                                Vietnam
+                                {{ puzzle.options[0].name }}
                             </b-button>
                         </b-col>
                         <b-col>
                             <b-button variant="outline-success">
-                                Japan
+                                {{ puzzle.options[1].name }}
                             </b-button>
                         </b-col>
                     </b-row>
                     <b-row>
                         <b-col>
                             <b-button variant="outline-success">
-                                England
+                                {{ puzzle.options[2].name }}
                             </b-button>
                         </b-col>
                         <b-col>
                             <b-button variant="outline-success">
-                                Laos
+                                {{ puzzle.options[3].name }}
                             </b-button>
                         </b-col>
                     </b-row>
@@ -41,14 +41,26 @@
 <script>
     const STORE_KEY = 'countries'
     import store from './_store'
-    import { mapGetters, mapActions } from 'vuex'
+    import { mapGetters, mapActions, mapMutations } from 'vuex'
+    import Puzzle from './puzzle'
+    import types from './_store/mutation-types'
+    // import { mapFields } from './_store/mapFields'
+    import _ from 'lodash'
 
     export default {
         name: 'CountriesIndex',
         components: {},
+        data () {
+            return {
+                puzzle: null,
+                temp: []
+            }
+        },
         computed: {
             ...mapGetters({
-                countryGetAllData: STORE_KEY + '/countryGetAllData'
+                countryGetAllData: STORE_KEY + '/countryGetAllData',
+                score: STORE_KEY + '/score',
+                currentCountry: STORE_KEY + '/currentCountry'
             })
         },
         beforeCreate () {
@@ -58,11 +70,35 @@
         },
         mounted () {
             this.getCountries()
+            .then(data => {
+                console.log(data)
+                this.shuffleCountries()
+                console.log('firsfddfx puzzle', this.countryGetAllData[0].name)
+                this.puzzle = this.createPuzzle()
+            })
         },
         methods: {
             ...mapActions({
                 getCountries: STORE_KEY + '/getCountries'
-            })
+            }),
+            ...mapMutations({
+                increaseCurrentCountry: STORE_KEY + '/' + types.INCREASE_CURRENT_COUNTRY,
+                 shuffleCountries: STORE_KEY + '/' + types.SHUFFLE_COUNTRIES
+            }),
+            createPuzzle () {
+                this.increaseCurrentCountry()
+                this.temp = [...Array(this.countryGetAllData.length).keys()]
+                let currentIndex = this.currentCountry
+                let answerCountry = this.countryGetAllData[currentIndex]
+                this.temp.splice(currentIndex, 1)
+                let fakeCountries = []
+                for (let i = 0; i < 3; i++) {
+                    let ranIndex = _.random(0, this.temp.length)
+                    fakeCountries.push(this.countryGetAllData[ranIndex])
+                    this.temp.splice(ranIndex, 1)
+                }
+                return new Puzzle(answerCountry, fakeCountries)
+            }
         }
     }
 </script>

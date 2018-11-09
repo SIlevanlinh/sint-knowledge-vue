@@ -1,7 +1,26 @@
 import Vue from 'vue'
 import types from './mutation-types'
+// import mtn from './mutation-types'
+import _ from 'lodash'
 
-const mutations = {}
+const mutations = {
+    updateField (state, payload) {
+        const { path, value } = payload
+        _.set(state, path, value)
+    },
+
+    [types.SHUFFLE_COUNTRIES] (state) {
+        state.response.countryGetAllData = _.shuffle(state.response.countryGetAllData)
+    },
+    
+    [types.INCREASE_SCORE] (state) {
+        state.score++
+    },
+
+    [types.INCREASE_CURRENT_COUNTRY] (state) {
+        state.currentCountry++
+    }
+}
 
 Object.keys(types).forEach(type => {
     mutations[types[type].BASE] = (state, payload) => {
