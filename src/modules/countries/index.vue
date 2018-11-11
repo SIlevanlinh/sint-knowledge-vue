@@ -5,7 +5,7 @@
             <b-row>
                 <b-col>
                     <b-img class="flag" :src=puzzle.answerCountry.flag fluid alt="Responsive image" />
-                    <b-row>
+                    <b-row class="answer-options">
                         <b-col>
                             <b-button-group>
                                 <b-button variant="warning" class="btn-option"
@@ -28,7 +28,7 @@
 
                 </b-col>
                 <b-col>
-                    <b-img src="http://earthspacescience.pbworks.com/f/1253231480/earth_walking_hc.gif" fluid alt="Responsive image" />
+                    <b-img :src="resultIcon" fluid alt="Responsive image" width="300rem"/>
                 </b-col>
             </b-row>
         </b-container>
@@ -51,7 +51,11 @@
             return {
                 puzzle: null,
                 temp: [],
-                answerDisabled: false
+                answerDisabled: false,
+                earthIcon: require('@/assets/earth_walking_hc.gif'),
+                correctIcon: require('@/assets/correct.gif'),
+                incorrectIcon: require('@/assets/incorrect.gif'),
+                resultIcon: null
             }
         },
         computed: {
@@ -73,6 +77,8 @@
                 this.shuffleCountries()
                 this.puzzle = this.createPuzzle()
             })
+
+            this.resultIcon = this.earthIcon
         },
         methods: {
             ...mapActions({
@@ -102,9 +108,13 @@
               let isCorrect = this.puzzle.checkAnswer(country)
               if (isCorrect) {
                 this.increaseScore()
+                this.resultIcon = this.correctIcon
+                return
               }
+              this.resultIcon = this.incorrectIcon
             },
             nextPuzzle () {
+              this.resultIcon = this.earthIcon
               this.puzzle = this.createPuzzle()
               this.answerDisabled = false
             }
@@ -121,6 +131,9 @@
 
   .flag {
     width: 25rem;
+  }
+  .answer-options {
+    margin: 1rem 1rem 1rem 1rem;
   }
 </style>
 
