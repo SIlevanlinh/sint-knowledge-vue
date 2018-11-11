@@ -1,6 +1,9 @@
 <template>
     <div class="hello">
-        <h1>Wavin' Flags <b-badge>{{ score }}</b-badge></h1>
+        <h1>Wavin' Flags 
+          <b-badge>{{ score }}</b-badge>
+          <span v-if="countryGetAllData" style="font-size: 20px"> / {{ countryGetAllData.length }}</span>
+        </h1>
         <b-container class="bv-example-row" style="background-color: #99cc00; padding: 1rem" v-if="puzzle != null">
             <b-row>
                 <b-col>
@@ -12,8 +15,8 @@
                                     v-for="option in puzzle.options" :key="option.alpha2code"
                                     @click="checkAnswer(option)"
                                     :disabled="answerDisabled">
-                                    {{ option.name }}
-                                    <!-- {{ option.translations.ja }} -->
+                                    <!-- {{ option.name }} -->
+                                    {{ option.translations.ja }}
                                 </b-button>
                             </b-button-group>
                         </b-col>
@@ -22,7 +25,7 @@
                     <!-- Next puzzle -->
                     <b-row>
                       <b-col>
-                        <b-button @click="nextPuzzle">Next</b-button>
+                        <b-button class="btn-next" variant="primary" @click="nextPuzzle">次</b-button>
                       </b-col>
                     </b-row>
 
@@ -127,6 +130,10 @@
     width: 10rem;
     white-space:normal !important;
     margin-right: 0.5rem;
+  }
+
+  .btn-next {
+    width: 9rem;
   }
 
   .flag {

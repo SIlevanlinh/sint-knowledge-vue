@@ -19,6 +19,10 @@ const mutations = {
 
     [types.INCREASE_CURRENT_COUNTRY] (state) {
         state.currentCountry++
+    },
+
+    [types.CHANGE_LOCALE] (state, payload) {
+      state.locale = payload
     }
 }
 
