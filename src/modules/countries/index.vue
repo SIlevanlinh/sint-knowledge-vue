@@ -10,15 +10,25 @@
                             <b-button-group>
                                 <b-button variant="warning" class="btn-option"
                                     v-for="option in puzzle.options" :key="option.alpha2code"
-                                    @click="checkAnswer(option)">
+                                    @click="checkAnswer(option)"
+                                    :disabled="answerDisabled">
                                     {{ option.name }}
+                                    <!-- {{ option.translations.ja }} -->
                                 </b-button>
                             </b-button-group>
                         </b-col>
                     </b-row>
+
+                    <!-- Next puzzle -->
+                    <b-row>
+                      <b-col>
+                        <b-button @click="nextPuzzle">Next</b-button>
+                      </b-col>
+                    </b-row>
+
                 </b-col>
                 <b-col>
-                    <b-img src="https://media.giphy.com/media/psmj7c3DbrJKkbRYFj/giphy.gif" fluid alt="Responsive image" />
+                    <b-img src="http://earthspacescience.pbworks.com/f/1253231480/earth_walking_hc.gif" fluid alt="Responsive image" />
                 </b-col>
             </b-row>
         </b-container>
@@ -40,7 +50,8 @@
         data () {
             return {
                 puzzle: null,
-                temp: []
+                temp: [],
+                answerDisabled: false
             }
         },
         computed: {
@@ -87,11 +98,15 @@
                 return new Puzzle(answerCountry, fakeCountries)
             },
             checkAnswer (country) {
+              this.answerDisabled = true
               let isCorrect = this.puzzle.checkAnswer(country)
-              console.log('isCorrect', isCorrect)
               if (isCorrect) {
                 this.increaseScore()
               }
+            },
+            nextPuzzle () {
+              this.puzzle = this.createPuzzle()
+              this.answerDisabled = false
             }
         }
     }
@@ -101,6 +116,7 @@
   .btn-option {
     width: 10rem;
     white-space:normal !important;
+    margin-right: 0.5rem;
   }
 
   .flag {
