@@ -1,32 +1,19 @@
 <template>
     <div class="hello">
-        <h1>Wavin' Flags <b-badge>10</b-badge></h1>
-        <b-container class="bv-example-row" style="background-color: #99cc00; padding: 50px" v-if="puzzle != null">
+        <h1>Wavin' Flags <b-badge>{{ score }}</b-badge></h1>
+        <b-container class="bv-example-row" style="background-color: #99cc00; padding: 1rem" v-if="puzzle != null">
             <b-row>
                 <b-col>
-                    <b-img :src=puzzle.answerCountry.flag fluid alt="Responsive image" />
+                    <b-img class="flag" :src=puzzle.answerCountry.flag fluid alt="Responsive image" />
                     <b-row>
                         <b-col>
-                            <b-button variant="outline-success">
-                                {{ puzzle.options[0].name }}
-                            </b-button>
-                        </b-col>
-                        <b-col>
-                            <b-button variant="outline-success">
-                                {{ puzzle.options[1].name }}
-                            </b-button>
-                        </b-col>
-                    </b-row>
-                    <b-row>
-                        <b-col>
-                            <b-button variant="outline-success">
-                                {{ puzzle.options[2].name }}
-                            </b-button>
-                        </b-col>
-                        <b-col>
-                            <b-button variant="outline-success">
-                                {{ puzzle.options[3].name }}
-                            </b-button>
+                            <b-button-group>
+                                <b-button variant="warning" class="btn-option"
+                                    v-for="option in puzzle.options" :key="option.alpha2code"
+                                    @click="checkAnswer(option)">
+                                    {{ option.name }}
+                                </b-button>
+                            </b-button-group>
                         </b-col>
                     </b-row>
                 </b-col>
@@ -73,7 +60,6 @@
             .then(data => {
                 console.log(data)
                 this.shuffleCountries()
-                console.log('firsfddfx puzzle', this.countryGetAllData[0].name)
                 this.puzzle = this.createPuzzle()
             })
         },
@@ -83,7 +69,8 @@
             }),
             ...mapMutations({
                 increaseCurrentCountry: STORE_KEY + '/' + types.INCREASE_CURRENT_COUNTRY,
-                 shuffleCountries: STORE_KEY + '/' + types.SHUFFLE_COUNTRIES
+                increaseScore: STORE_KEY + '/' + types.INCREASE_SCORE,
+                shuffleCountries: STORE_KEY + '/' + types.SHUFFLE_COUNTRIES
             }),
             createPuzzle () {
                 this.increaseCurrentCountry()
@@ -98,12 +85,27 @@
                     this.temp.splice(ranIndex, 1)
                 }
                 return new Puzzle(answerCountry, fakeCountries)
+            },
+            checkAnswer (country) {
+              let isCorrect = this.puzzle.checkAnswer(country)
+              console.log('isCorrect', isCorrect)
+              if (isCorrect) {
+                this.increaseScore()
+              }
             }
         }
     }
 </script>
 
 <style>
+  .btn-option {
+    width: 10rem;
+    white-space:normal !important;
+  }
+
+  .flag {
+    width: 25rem;
+  }
 </style>
 
 
