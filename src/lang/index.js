@@ -2,26 +2,23 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 
+import en from './locales/en.json'
+import ja from './locales/ja.json'
+
 Vue.use(VueI18n)
 
 // Ready translated locale messages
 const messages = {
-  en: {
-    message: {
-      next: 'next'
-    }
-  },
-  ja: {
-    message: {
-      next: '次'
-    }
-  }
+    en,
+    ja
 }
+
 
 // Create VueI18n instance with options
 const i18n = new VueI18n({
-  locale: 'ja', // set locale
-  messages, // set locale messages
+    locale: 'ja', // set locale
+    fallbackLocale: 'en',
+    messages, // set locale messages
 })
 
 export default i18n
