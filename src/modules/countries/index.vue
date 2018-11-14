@@ -129,7 +129,7 @@ export default {
 
 <style>
   .btn-option {
-    width: 10rem;
+    width: 8.9rem;
     white-space:normal !important;
     margin-right: 0.5rem;
   }
