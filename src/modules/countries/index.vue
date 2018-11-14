@@ -25,7 +25,7 @@
                     <!-- Next puzzle -->
                     <b-row>
                       <b-col>
-                        <b-button class="btn-next" variant="primary" @click="nextPuzzle">次</b-button>
+                        <b-button class="btn-next" variant="primary" @click="nextPuzzle">{{ $t("message.next") }}</b-button>
                       </b-col>
                     </b-row>
 
