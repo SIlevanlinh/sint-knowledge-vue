@@ -1,16 +1,16 @@
 <template>
     <b-container class="hello">
-        <h1>Wavin' Flags 
+        <h1 align="center">Wavin' Flags 
           <b-badge>{{ score }}</b-badge>
           <span v-if="countryGetAllData" style="font-size: 20px"> / {{ countryGetAllData.length }}</span>
         </h1>
         <b-container class="bv-example-row" style="background-color: #99cc00; padding: 1rem" v-if="puzzle != null">
             <b-row>
-                <b-col>
+                <b-col cols="8" align="center">
                     <b-img class="flag" :src=puzzle.answerCountry.flag fluid alt="Responsive image" />
-                    <b-row class="answer-options">
+                    <b-row class="answer-options" align="center">
                         <b-col>
-                            <b-button-group>
+                            <b-button-group class="flex-wrap">
                                 <b-button variant="warning" class="btn-option"
                                     v-for="option in puzzle.options" :key="option.alpha2code"
                                     @click="checkAnswer(option)"
