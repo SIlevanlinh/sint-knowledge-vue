@@ -1,5 +1,5 @@
 <template>
-    <div class="hello">
+    <b-container class="hello">
         <h1>Wavin' Flags 
           <b-badge>{{ score }}</b-badge>
           <span v-if="countryGetAllData" style="font-size: 20px"> / {{ countryGetAllData.length }}</span>
@@ -35,7 +35,7 @@
                 </b-col>
             </b-row>
         </b-container>
-    </div>
+    </b-container>
 </template>
 
 <script>
