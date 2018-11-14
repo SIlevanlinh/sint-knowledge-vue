@@ -1,5 +1,5 @@
 <template>
-    <h1 align="center">Wavin' Flags 
+    <h1 class="game-name" align="center">Wavin' Flags 
       <b-badge>{{ score }}</b-badge>
       <span style="font-size: 20px"> / {{ numberOfCountries }}</span>
     </h1>
@@ -20,4 +20,13 @@ export default {
     }
 }
 </script>
+
+<style>
+    .game-name {
+        font-weight: bold;
+        font-style: italic;
+        color: #EF1C23;
+    }
+</style>
+
 

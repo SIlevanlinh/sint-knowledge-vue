@@ -1,7 +1,8 @@
 <template>
-    <b-container fluid class="layout">
-        <b-row>
-            <b-col><LocaleChanger/></b-col>
+    <b-container class="layout">
+        <b-row class="header">
+            <b-col cols="2"><LocaleChanger/></b-col>
+            <b-col cols="10" id="page-title"><h1>{{  $t("message.company") }}</h1></b-col>
         </b-row>
         <b-row>
             <b-col><router-view/></b-col>
@@ -23,6 +24,14 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
     .layout {
-        background-color: aquamarine;
+        margin-top: 1rem;
+        .header {
+            margin-bottom: 1.5rem;
+            #page-title {
+                font-weight: bold;
+                font-style: italic;
+                color: #0B9ED0;
+            }
+        }
     }
 </style>

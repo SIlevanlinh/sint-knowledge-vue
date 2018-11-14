@@ -1,7 +1,7 @@
 <template>
   <b-container class="locale-changer">
     <b-row>
-        <b-col cols="1">
+        <b-col>
             <b-form-select id="exampleInput3"
                         :options="langs"
                         required
@@ -16,7 +16,12 @@
 export default {
   name: 'locale-changer',
   data () {
-    return { langs: ['ja', 'en'] }
+    return {
+        langs: [
+            { value: 'ja', text: '日本語' },
+            { value: 'en', text: 'English'}
+        ]
+    }
   }
 }
 </script>
