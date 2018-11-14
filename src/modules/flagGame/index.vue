@@ -37,7 +37,7 @@
 
 <script>
 
-const STORE_KEY = 'countries'
+const STORE_KEY = 'flagGame'
 import store from './_store'
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 import Puzzle from './puzzle'
@@ -48,7 +48,7 @@ import _ from 'lodash'
 import FlagGameHeader from './_components/Header'
 
 export default {
-    name: 'CountriesIndex',
+    name: 'flag-game',
     components: {
         FlagGameHeader
     },

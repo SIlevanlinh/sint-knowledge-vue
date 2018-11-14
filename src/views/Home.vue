@@ -1,17 +1,17 @@
 <template>
   <div class="home">
-    <Countries/>
+    <FlagGame/>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import Countries from '@/modules/countries'
+import FlagGame from '@/modules/flagGame'
 
 export default {
   name: 'home',
   components: {
-    Countries
+    FlagGame
   }
 }
 </script>
