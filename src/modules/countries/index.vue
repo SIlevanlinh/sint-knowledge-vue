@@ -1,7 +1,7 @@
 <template>
     <b-container class="hello" v-if="countryGetAllData">
         <FlagGameHeader :score="score" :numberOfCountries="countryGetAllData.length"/>
-        <b-container class="bv-example-row" style="background-color: #99cc00; padding: 1rem" v-if="puzzle != null">
+        <b-container style="background-color: #99cc00; padding: 1rem" v-if="puzzle != null">
             <b-row>
                 <b-col cols="8" align="center">
                     <b-img class="flag" :src=puzzle.answerCountry.flag fluid alt="Responsive image" />
@@ -13,7 +13,7 @@
                                     @click="checkAnswer(option)"
                                     :disabled="answerDisabled">
                                     <!-- {{ option.name }} -->
-                                    {{ option.translations.ja }}
+                                    {{ option.translations[$i18n.locale] || option.name}}
                                 </b-button>
                             </b-button-group>
                         </b-col>
