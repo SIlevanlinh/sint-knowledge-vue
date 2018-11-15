@@ -13,7 +13,8 @@
 - 1つの国の旗が画面にランダムに表示される。
 - 4つの選択肢の中から1つ正しいものを選ぶ。
 - 正解であれば、１ポイントを獲得する。
-![flag game screenshot](/knowledge/open.file/download?fileNo=1102)
+
+![Screen Mockup](/knowledge/open.file/download?fileNo=1103)
 
 # テクニカル
 - Vue：JavaScriptのフレームワーク
@@ -30,6 +31,7 @@ cd sint-knowledge-vue
 npm run serve
 ```
 続きを読む：[oembed https://cli.vuejs.org]
+
 ## プロジェクト構造
 ```
 sint-knowledge-vue
@@ -96,9 +98,14 @@ sint-knowledge-vue
 ```
 続きを読む：[oembed https://medium.com/3yourmind/large-scale-vuex-application-- structures-651e44863e2f]
 
+## 層スタック
+
+![Layer stack](/knowledge/open.file/download?fileNo=1104)
+
 # デモ
 - Github: [oembed https://github.com/SIlevanlinh/sint-knowledge-vue]
 - ライブデモ: [oembed https://flag.surge.sh]
+![flag game screenshot](/knowledge/open.file/download?fileNo=1102)
 
 # 参考文献
 - Large-scale Vuex application structures https://medium.com/3yourmind/large-scale-vuex-application-- structures-651e44863e2f
