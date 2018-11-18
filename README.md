@@ -76,7 +76,6 @@ sint-knowledge-vue
     │   │   
     │   └───flagGame
     │       │   index.vue
-    │       │   meta.js
     │       │   puzzle.js
     │       │
     │       └───_api
@@ -304,39 +303,23 @@ class API {
     this.axios = axios
     this.endpoints = {}
   }
-  /**
-   * Create and store a single entity's endpoints
-   * @param {A entity Object} entity
-   */
+
   createEntity (entity) {
     this.endpoints[entity.name] = this.createBasicCRUDEndpoints(entity)
   }
 
-  createEntities (arrayOfEntity) {
-    arrayOfEntity.forEach(this.createEntity.bind(this))
-  }
-  /**
-   * Create the basic endpoints handlers for CRUD operations
-   * @param {A entity Object} entity
-   */
   createBasicCRUDEndpoints ({name}) {
     var endpoints = {}
 
     const resourceURL = `${name}`
 
-    endpoints.getAll = (query = {}) => this.axios.get(`${resourceURL}/`, { params: query, requestAt: new Date() })
+    endpoints.getAll = (query = {}) => this.axios.get(`${resourceURL}/`, { params: query })
 
-    endpoints.getOne = ({ id }) => this.axios.get(`${resourceURL}/${id}`)
-
-    endpoints.create = (toCreate) => this.axios.post(resourceURL, toCreate)
-
-    endpoints.update = (toUpdate) => this.axios.put(`${resourceURL}/${toUpdate.id}`, toUpdate)
-
-    endpoints.patch = ({id}, toPatch) => this.axios.patch(`${resourceURL}/${id}/`, toPatch)
-
-    endpoints.multiPatch = (query = {}, toPatch) => this.axios.patch(`${resourceURL}/multi/`, toPatch, { params: query })
-
-    endpoints.delete = ({ id }) => this.axios.delete(`${resourceURL}/${id}`)
+    // getOne
+    // create
+    // update
+    // patch
+    // delete
 
     return endpoints
   }
@@ -367,7 +350,6 @@ modules
 │ 
 └───flagGame
     │   index.vue
-    │   meta.js
     │   puzzle.js
     │
     └───_api
@@ -397,6 +379,18 @@ beforeCreate () {
 }
 
 // STORE_KEY = 'flagGame'
+```
+
+リソースを作成します。
+```
+// _api/index.js
+
+import { restcountriesApi } from '@/api/apis'
+
+const countryResource = 'all'
+restcountriesApi.createEntity({ name: countryResource })
+
+export const countries = restcountriesApi.endpoints[countryResource]
 ```
 
 モジュールがマウントされると、APIを呼び出すようにアクションをディスパッチします
@@ -487,6 +481,28 @@ methods: {
     checkAnswer (country) {},
     nextPuzzle () {}
 }
+```
+
+この「flagGame」モジュールをViewのHomeに入れます。
+```
+// Home.vue
+
+<template>
+  <div class="home">
+    <FlagGame/>
+  </div>
+</template>
+
+<script>
+import FlagGame from '@/modules/flagGame'
+
+export default {
+  name: 'home',
+  components: {
+    FlagGame
+  }
+}
+</script>
 ```
 
 # デモ
