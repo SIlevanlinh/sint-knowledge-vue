@@ -112,9 +112,9 @@ export default {
             this.answerDisabled = true
             let isCorrect = this.puzzle.checkAnswer(country)
             if (isCorrect) {
-            this.increaseScore()
-            this.resultIcon = this.correctIcon
-            return
+                this.increaseScore()
+                this.resultIcon = this.correctIcon
+                return
             }
             this.resultIcon = this.incorrectIcon
         },
