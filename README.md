@@ -297,6 +297,8 @@ api
 
 API というCLASS を作ります。
 ```
+// API.js
+
 class API {
   constructor ({ axios }) {
     this.axios = axios
@@ -345,6 +347,8 @@ export default API
 
 「apis.js」ってモジュール内には、APIクラスのインスタンスをたくさん作成することができます。
 ```
+// apis.js
+
 import axios from 'axios'
 import API from './API'
 
@@ -380,9 +384,12 @@ modules
        │   async-utils.js
 ```
 
-動的にモジュールを登録する  
-index.vue には、
+![actions in app](/knowledge/open.file/download?fileNo=1102)
+
+動的にモジュールを登録する
 ```Javascripts
+// index.vue
+
 beforeCreate () {
     if (!(STORE_KEY in this.$store._modules.root._children)) {
         this.$store.registerModule(STORE_KEY, store)
@@ -394,6 +401,8 @@ beforeCreate () {
 
 モジュールがマウントされると、APIを呼び出すようにアクションをディスパッチします
 ```
+// action.js
+
 const getCountries = async context => {
     let api = {
       name: countries.getAll,
@@ -407,8 +416,9 @@ const getCountries = async context => {
 
 リクエスト後に非同期リクエストと状態更新を行うための関数を作成します。
 
-async-utils.js には、
 ```
+// async-utils.js
+
 const doAsync = async (context, api, mutationTypes) => {
   // API コール
   // 状態を更新する
@@ -417,6 +427,8 @@ const doAsync = async (context, api, mutationTypes) => {
 
 以下はすべてのmutationsである
 ```
+// mutation-types.js
+
 import _ from 'lodash'
 
 const createAsyncMutation = (type) => ({
@@ -442,6 +454,8 @@ export default {
 
 パズルのためのクラスを作成します。
 ```
+// puzzle.js
+
 class Puzzle {
     constructor(answerCountry, fakeCountries) {
         this.answerCountry = answerCountry
@@ -458,6 +472,8 @@ class Puzzle {
 
 モジュールがマウントされているとき、または「次」ってボタンがクリックされたとき、createPuzzleメソッドが呼び出されます
 ```
+// index.vue
+
 methods: {
     ...mapActions({
         getCountries: STORE_KEY + '/getCountries'
@@ -480,6 +496,9 @@ methods: {
 
 # 参考文献
 - Large-scale Vuex application structures https://medium.com/3yourmind/large-scale-vuex-application-- structures-651e44863e2f
-- Countries in the world Restfull API https://restcountries.eu/
+- 世界の国と地域のデータ API https://restcountries.eu/
 - Vuejs https://vuejs.org/index.html
 - Vuex https://vuex.vuejs.org/
+- Bootstrap-Vue https://bootstrap-vue.js.org/
+- Vue-I18n https://kazupon.github.io/vue-i18n/
+- Axios https://github.com/axios/axios
