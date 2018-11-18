@@ -381,6 +381,17 @@ beforeCreate () {
 // STORE_KEY = 'flagGame'
 ```
 
+これはこのモジュールのすべての状態です。
+```
+// _store/index.js
+
+const state = {
+    score: 0,
+    currentCountry: -1,
+    response: {} // APIからのデータ
+}
+```
+
 リソースを作成します。
 ```
 // _api/index.js
@@ -477,9 +488,35 @@ methods: {
         increaseScore: STORE_KEY + '/' + types.INCREASE_SCORE,
         shuffleCountries: STORE_KEY + '/' + types.SHUFFLE_COUNTRIES
     }),
-    createPuzzle () {},
-    checkAnswer (country) {},
-    nextPuzzle () {}
+    createPuzzle () {
+        this.increaseCurrentCountry()
+        this.temp = [...Array(this.countryGetAllData.length).keys()]
+        let currentIndex = this.currentCountry
+        let answerCountry = this.countryGetAllData[currentIndex]
+        this.temp.splice(currentIndex, 1)
+        let fakeCountries = []
+        for (let i = 0; i < 3; i++) {
+            let ranIndex = _.random(0, this.temp.length)
+            fakeCountries.push(this.countryGetAllData[ranIndex])
+            this.temp.splice(ranIndex, 1)
+        }
+        return new Puzzle(answerCountry, fakeCountries)
+    },
+    checkAnswer (country) {
+        this.answerDisabled = true
+        let isCorrect = this.puzzle.checkAnswer(country)
+        if (isCorrect) {
+            this.increaseScore()
+            this.resultIcon = this.correctIcon
+            return
+        }
+        this.resultIcon = this.incorrectIcon
+    },
+    nextPuzzle () {
+        this.resultIcon = this.earthIcon
+        this.puzzle = this.createPuzzle()
+        this.answerDisabled = false
+    }
 }
 ```
 
