@@ -104,8 +104,9 @@ sint-knowledge-vue
 npm install vue-router
 ```
 
-「router.js」に、
 ```vuejs
+// router.js
+
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
@@ -141,26 +142,33 @@ store
 │   mutations.js
 ```
 
-「getters.js」に、
+
 ```
+// getters.js
+
 const getters = {}
 
 export default getters
 ```
-「actions.js」に、
+
 ```
+// actions.js
+
 const actions = {}
 
 export default actions
 ```
-「mutations.js」に、
+
 ```
+// mutations.js
+
 const mutations = {}
 
 export default mutations
 ```
-「index.js」に、
+
 ```
+// index.js
 import Vue from 'vue'
 import Vuex from 'vuex'
 
@@ -188,10 +196,13 @@ npm install bootstrap-vue
 ```
 
 ### 国際化
+日本語と英語の2つの言語をサポートします。
+ページタイトルと「次」ってボタンの内容を翻訳する必要があります。
 国際化のために、「Vue-i18n」って使います。
 ```
 npm install vue-i18n
 ```
+
 以下のフォルダとファイルを作成します。
 ```
 lang
@@ -201,8 +212,9 @@ lang
     │   en.json
 ```
 
-「ja.json」に、
 ```
+// ja.json
+
 {
     "message": {
         "company": "システムインテグレータ",
@@ -211,8 +223,9 @@ lang
 }
 ```
 
-「en.json」に、
 ```
+// en.json
+
 {
     "message": {
         "company": "System Integrator",
@@ -221,8 +234,9 @@ lang
 }
 ```
 
-「index.js」に、
 ```
+// index.js
+
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 
@@ -246,8 +260,9 @@ export default i18n
 ```
 
 ### main.js
-「main.js」に、
 ```
+// main.js
+
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
@@ -345,6 +360,8 @@ export const restcountriesApi = new API({ axios: restcountriesAxios })
 ```
 
 ## Flag Game
+これはアプリケーションの主要部分です。
+これを別のモジュールに分割して、特定の機能を持つ特別なコンポーネントとして扱います。
 ```
 modules
 │ 
@@ -366,34 +383,39 @@ modules
        │   async-utils.js
 ```
 
-![actions in app](/knowledge/open.file/download?fileNo=1102)
+後は以下のようにこれをViewのHomeに入れられます。
+```
+// Home.vue
 
-動的にモジュールを登録する
+<template>
+  <div class="home">
+    <FlagGame/>
+  </div>
+</template>
+
+<script>
+import FlagGame from '@/modules/flagGame'
+
+export default {
+  name: 'home',
+  components: {
+    FlagGame
+  }
+}
+</script>
+```
+
+これから、残りの部分は、アプリケーションの他の部分に触れることなくこのモジュールを構築することです。
+
+モジュールには「index.vue」というメインファイルがあります。
+テンプレートとライフサイクルフックはここに入れています。
+
+モジュールには独自のローカルストア、コンポーネント、APIがありますのでアンダースコアでこれらを示します。
+「_store」、「_components」、「_api」のようです。
+
+さっき「https://restcountries.eu/rest/v2/」からデータを取得するためのAPIクラスのインスタンスを作成しました。
+今、国と地域のリソースを作成する必要があります。
 ```Javascripts
-// index.vue
-
-beforeCreate () {
-    if (!(STORE_KEY in this.$store._modules.root._children)) {
-        this.$store.registerModule(STORE_KEY, store)
-    }
-}
-
-// STORE_KEY = 'flagGame'
-```
-
-これはこのモジュールのすべての状態です。
-```
-// _store/index.js
-
-const state = {
-    score: 0,
-    currentCountry: -1,
-    response: {} // APIからのデータ
-}
-```
-
-リソースを作成します。
-```
 // _api/index.js
 
 import { restcountriesApi } from '@/api/apis'
@@ -404,35 +426,26 @@ restcountriesApi.createEntity({ name: countryResource })
 export const countries = restcountriesApi.endpoints[countryResource]
 ```
 
-モジュールがマウントされると、APIを呼び出すようにアクションをディスパッチします
+次はモジュールのストアーについて
+モジュールの状態です。
 ```
-// action.js
+// _store/index.js
 
-const getCountries = async context => {
-    let api = {
-      name: countries.getAll,
-      params: []
+const state = {
+    score: 0,                       // ゲームの得点
+    currentCountry: -1,             // 現在パズルにある国や地域のインデックス
+    response: {                     // APIから応答されたデータ
+        countryGetAllPending        // APIリクエストの送信中かどうか
+        countryGetAllStatusCode     // HTTP レスポンス状態コード
+        countryGetAllData           // レスポンスのデータ
     }
-    let mutationTypes = types.COUNTRY_GET_ALL
-  
-    return asyncUtil.doAsync(context, api, mutationTypes, true)
 }
 ```
 
-リクエスト後に非同期リクエストと状態更新を行うための関数を作成します。
-
+APIからデータを取得するときにに、多くの「mutations」を使用して状態を更新します。
+コードの重複や再利用を避けるのために、以下のようなmutation-typesのパターンを使用します。
 ```
-// async-utils.js
-
-const doAsync = async (context, api, mutationTypes) => {
-  // API コール
-  // 状態を更新する
-}
-```
-
-以下はすべてのmutationsである
-```
-// mutation-types.js
+// _store/mutation-types.js
 
 import _ from 'lodash'
 
@@ -449,15 +462,100 @@ const createAsyncMutation = (type) => ({
 })
 
 export default {
-  COUNTRY_GET_ALL: createAsyncMutation('COUNTRY_GET_ALL'),
-  SHUFFLE_COUNTRIES: 'SHUFFLE_COUNTRIES',
-  INCREASE_SCORE: 'INCREASE_SCORE',
-  INCREASE_CURRENT_COUNTRY: 'INCREASE_CURRENT_COUNTRY',
-  CHANGE_LOCALE: 'CHANGE_LOCALE'
+  COUNTRY_GET_ALL: createAsyncMutation('COUNTRY_GET_ALL')
 }
 ```
 
+```
+// _store/mutations.js
+
+import Vue from 'vue'
+import types from './mutation-types'
+import _ from 'lodash'
+
+const mutations = {}
+
+Object.keys(types).forEach(type => {
+    mutations[types[type].BASE] = (state, payload) => {
+      switch (payload.type) {
+        case types[type].PENDING:
+          return Vue.set(state.response, types[type].loadingKey, payload.value)
+  
+        case types[type].SUCCESS:
+          Vue.set(state.response, types[type].statusCode, payload.statusCode)
+          return Vue.set(state.response, types[type].stateKey, payload.data)
+  
+        case types[type].FAILURE:
+          return Vue.set(state.response, types[type].statusCode, payload.statusCode)
+  
+        case types[type].UPDATE_REQUEST_AT:
+          return Vue.set(state.response, types[type].requestAt, payload.requestAt)
+      }
+    }
+})
+```
+
+モジュールがマウントされると、APIを呼び出すようにアクションをディスパッチします。
+```
+// action.js
+import { countries } from '../_api/index'
+import asyncUtil from './async-utils'
+import types from './mutation-types'
+
+const getCountries = async context => {
+    let api = {
+      name: countries.getAll,
+      params: []
+    }
+    let mutationTypes = types.COUNTRY_GET_ALL
+  
+    return asyncUtil.doAsync(context, api, mutationTypes, true)
+}
+```
+
+リクエスト後に非同期リクエストと状態更新を行うための関数を作成します。
+```
+// async-utils.js
+
+const doAsync = async (context, api, mutationTypes) => {
+  // API コール
+  // 状態を更新する
+  // 詳細については、チェックしてください。
+  // https://github.com/SIlevanlinh/sint-knowledge-vue/blob/master/src/modules/flagGame/_store/async-utils.js
+}
+```
+
+簡単にgetters を作成できますがコードベースを参照してください。
+```
+// _store/getters.js
+// https://github.com/SIlevanlinh/sint-knowledge-vue/blob/master/src/modules/flagGame/_store/getters.js
+```
+
+次は動的にモジュールを登録します。
+```Javascripts
+// index.vue
+const STORE_KEY = 'flagGame'
+import store from './_store'
+
+beforeCreate () {
+    if (!(STORE_KEY in this.$store._modules.root._children)) {
+        this.$store.registerModule(STORE_KEY, store)
+    }
+}
+```
+
+mountedにAPIからデータを取得するアクションをディスパッチします。
+```
+mounted () {
+    this.getCountries()                     // mapActionsの使用
+    .then(data => {
+        this.shuffleCountries()             // mapmutationsの使用
+        this.puzzle = this.createPuzzle()   // パズルを作成します
+})
+```
+
 パズルのためのクラスを作成します。
+パズルには四つのオプションがあります。一つは正解、それ以外は間違っています。
 ```
 // puzzle.js
 
@@ -475,7 +573,15 @@ class Puzzle {
 }
 ```
 
-モジュールがマウントされているとき、または「次」ってボタンがクリックされたとき、createPuzzleメソッドが呼び出されます
+![actions in app](/knowledge/open.file/download?fileNo=1115)
+
+モジュールがマウントされているとき、または「次」ってボタンがクリックされたとき、
+createPuzzleメソッドが呼び出して、パズルインスタンスを作成します。
+「次」ってボタンがクリックされたとき、私は「checkAnswer」ってメソッドを呼び出して答えをチェックします。
+一度だけ答えて戻れないことに注意してください。
+正解であれば1点を得ます。
+できるだけ多くの人が答えるようにしてください。
+
 ```
 // index.vue
 
@@ -519,28 +625,8 @@ methods: {
     }
 }
 ```
-
-この「flagGame」モジュールをViewのHomeに入れます。
-```
-// Home.vue
-
-<template>
-  <div class="home">
-    <FlagGame/>
-  </div>
-</template>
-
-<script>
-import FlagGame from '@/modules/flagGame'
-
-export default {
-  name: 'home',
-  components: {
-    FlagGame
-  }
-}
-</script>
-```
+今、flagGameモジュールは終わりです。
+コードが長いので、ここですべてをカバーすることができるので、私のgithubを参照してください。
 
 # デモ
 - Github: [oembed https://github.com/SIlevanlinh/sint-knowledge-vue]
