@@ -1,4 +1,4 @@
-# 【VueJS】AxiosというプロミスベースのHTTPのライブラリをVueのアプリケーションに統合する。
+# 【VueJS】AxiosというプロミスベースのHTTP通信のライブラリをVueのアプリケーションに統合する。
 
 # 目的
 AxiosというライブラリVueのアプリケーションに統合の方法を理解してもらう。
@@ -7,7 +7,14 @@ AxiosというライブラリVueのアプリケーションに統合の方法を
 APIのサーバーに要求を出して、データを取得するため、Axiosによって、APIクラスを作成する。
 
 # Axiosとは？
-https://github.com/axios/axios
+Axiosは、HTTP通信を簡単に行うことができるJavascriptライブラリです。フロントエンドばかりでなく、Node.JSでも利用できます。Axiosの特徴して以下のような点が挙げられる。
+
+Axiosの特徴
+- XML HttpReqestを簡単に生成できる
+- Promiseベースである
+- カスタムヘッダーやBasic認証など、いろいろなオプションが手軽にできる
+
+Github: [oembed https://github.com/axios/axios]
 
 # Axiosの使い方
 ## インストール
@@ -44,13 +51,13 @@ myAxios.get('/user?ID=12345')
   })
 ```
 
-## 問題
+## Axiosを使用するときの問題
 アプリケーションが小さく、わずか1または2 APIサーバーからのデータを使用する場合は、上記のAxiosまたは純粋なjavascriptを使用することができる。
 
 しかし、アプリケーションで多数のAPIサーバーのデータを使用し、各APIサーバーには多くのリソースがあるとしたら、何が起こるのか？　管理が非常に複雑にならないんじゃない？
 
 ## 問題解決
-上記の問題を解決するため、APIというクラスを作成して、APIリクエストの管理を支援しす。
+上記の問題を解決するため、APIというクラスを作成して、柔軟にHTTP通信の管理を支援する。
 ```
 class API {
     constructor (axios) {
@@ -59,13 +66,13 @@ class API {
     }
 
     createEntity (entity) {
-
+        // コード
     }
 }
 ```
-APIクラスの各インスタンスは、特定のAPIサーバー用だ。  
-たとえば、アプリケーションは異なるAPIを使用する。  
-各APIサーバーには多くのリソースがある。
+APIクラスの各インスタンスは、特定のAPIサーバー用だ。  	
+多分、アプリケーションは異なるAPIを使用し、各APIサーバーには多くのリソースがある。
+たとえば、以下のAPIを使用しよう。
 - Restfulの偽のAPIデータ： https://jsonplaceholder.typicode.com/  
     リソース：
     - posts
@@ -82,6 +89,7 @@ APIクラスの各インスタンスは、特定のAPIサーバー用だ。
     - capitals
     - ...
 
+APIクラスが既に実装されている場合は、以下のように世界のすべての国または地域のデータを取得するよう求めるリクエストを実行する。
 ```
 const jphPath = 'https://jsonplaceholder.typicode.com/'
 const restcountriesPath = 'https://restcountries.eu/rest/v2/'
@@ -110,51 +118,52 @@ countries.getAll()
         // 常に実行される
     })
 ```
-これから、クラスAPIを実装する。
+
+今から、クラスAPIを実装しよう。
 ```
 class API {
-  constructor (axios) {
-    this.axios = axios
-    this.endpoints = {}
-  }
-  /**
-   * Create and store a single entity's endpoints
-   * @param {A entity Object} entity
-   */
-  createEntity (entity) {
-    this.endpoints[entity.name] = this.createBasicCRUDEndpoints(entity)
-  }
+    constructor (axios) {
+        this.axios = axios
+        this.endpoints = {}
+    }
 
-  createEntities (arrayOfEntity) {
-    arrayOfEntity.forEach(this.createEntity.bind(this))
-  }
-  /**
-   * Create the basic endpoints handlers for CRUD operations
-   * @param {A entity Object} entity
-   */
-  createBasicCRUDEndpoints ({name}) {
-    var endpoints = {}
+    /**
+    * 単一のエンティティのエンドポイントを作成して保存する。
+    * @param {エンティティオブジェクト} entity
+    */
+    createEntity (entity) {
+        this.endpoints[entity.name] = this.createBasicCRUDEndpoints(entity)
+    }
 
-    const resourceURL = `${name}`
+    /**
+    * CRUD操作の基本エンドポイントハンドラを作成する。
+    * @param {エンティティオブジェクト} entity
+    */
+    createBasicCRUDEndpoints ({name}) {
+        var endpoints = {}
 
-    endpoints.getAll = (query = {}) => this.axios.get(`${resourceURL}/`, { params: query })
+        const resourceURL = `${name}`
 
-    endpoints.getOne = ({ id }) => this.axios.get(`${resourceURL}/${id}`)
+        endpoints.getAll = (query = {}) => this.axios.get(`${resourceURL}/`, { params: query })
 
-    endpoints.create = (toCreate) => this.axios.post(resourceURL, toCreate)
+        endpoints.getOne = ({ id }) => this.axios.get(`${resourceURL}/${id}`)
 
-    endpoints.update = (toUpdate) => this.axios.put(`${resourceURL}/${toUpdate.id}`, toUpdate)
+        endpoints.create = (toCreate) => this.axios.post(resourceURL, toCreate)
 
-    endpoints.patch = ({id}, toPatch) => this.axios.patch(`${resourceURL}/${id}/`, toPatch)
+        endpoints.update = (toUpdate) => this.axios.put(`${resourceURL}/${toUpdate.id}`, toUpdate)
 
-    endpoints.delete = ({ id }) => this.axios.delete(`${resourceURL}/${id}`)
+        endpoints.patch = ({id}, toPatch) => this.axios.patch(`${resourceURL}/${id}/`, toPatch)
 
-    return endpoints
-  }
+        endpoints.delete = ({ id }) => this.axios.delete(`${resourceURL}/${id}`)
+
+        return endpoints
+    }
 }
 ```
 
 ## Vueのアプリケーションに統合する
+私はアプリケーションをモジュールに分ける。
+各モジュールはアプリケーションの機能を担当する。
 ```
 project
 │
