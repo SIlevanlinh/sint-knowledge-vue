@@ -7,4 +7,4 @@ const restcountriesAxios = axios.create({
   baseURL: restcountriesPath
 })
 
-export const restcountriesApi = new API({ axios: restcountriesAxios })
+export const restcountriesApi = new API(restcountriesAxios)
