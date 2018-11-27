@@ -2,7 +2,7 @@
     <b-container class="layout">
         <b-row class="header">
             <b-col cols="2"><LocaleChanger/></b-col>
-            <b-col cols="10" id="page-title"><h1>{{  $t("message.company") }}</h1></b-col>
+            <b-col cols="10" id="page-title"><h1>{{  $t("message.pageTitle") }}</h1></b-col>
         </b-row>
         <b-row>
             <b-col><router-view/></b-col>

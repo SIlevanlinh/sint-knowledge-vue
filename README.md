@@ -217,7 +217,7 @@ lang
 
 {
     "message": {
-        "company": "システムインテグレータ",
+        "pageTitle": "システムインテグレータ",
         "next": "次"
     }
 }
@@ -228,7 +228,7 @@ lang
 
 {
     "message": {
-        "company": "System Integrator",
+        "pageTitle": "System Integrator",
         "next": "next"
     }
 }
