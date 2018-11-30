@@ -1,4 +1,4 @@
-# 【VueJS】AxiosというプロミスベースのHTTP通信のライブラリをVueのアプリケーションに統合する。
+# 【VueJS】AxiosによるAPI通信共通化。
 
 # 目的
 AxiosというライブラリVueのアプリケーションに統合の方法を理解してもらう。
@@ -26,104 +26,42 @@ AxiosのGithub: [oembed https://github.com/axios/axios]
 npm install axios
 ```
 
-## インスタンスの作成
+## 使い方
+例えば、以下のAPIポートをアクセをして、ユーザーとそのアルバムのデータを取得したい。
+APIポート： https://some-domain.com/api/  
+リソース： users, albums
+
 ```
 import axios from 'axios'
 
+// Axiosのインスタンスを作成する
 const myAxios = axios.create({
-  baseURL: 'https://some-domain.com/api/',
-  timeout: 1000,
-  headers: {'X-Custom-Header': 'foobar'}
+    baseURL: 'https://some-domain.com/api/',
+    timeout: 1000,
+    headers: {'X-Custom-Header': 'foobar'}
 })
-```
 
-## リクエストの実行
-```
-// 指定されたIDを持つユーザーをリクエストする
+// リクエストの実行する
+myAxios.get('/users?id=12345')
+    .then(response => { // 成功時にデータを処理する })
+    .catch(error => { // ハンドルエラー })
+    .then(_ => { // 常に実行される })
 
-myAxios.get('/user?ID=12345')
-  .then(function (response) {
-    // 成功時にデータを処理する
-    console.log(response)
-  })
-  .catch(function (error) {
-    // ハンドルエラー
-    console.log(error)
-  })
-  .then(function () {
-    // 常に実行される
-  })
+myAxios.get('/albums?id=12345')
+    .then(response => { // 成功時にデータを処理する })
+    .catch(error => { // ハンドルエラー })
+    .then(_ => { // 常に実行される })
 ```
 
 ## Axiosを基本的に使用の問題
-アプリケーションが小さく、わずか1または2 APIサーバーからのデータを使用する場合は、上記のAxiosまたは純粋なjavascriptを使用することができる。
+上記のように各API呼び出しのためのハンドルを書く必要がある。
+アプリケーションが小さい場合は、それは大きな問題ではない。
 
-しかし、アプリケーションで多数のAPIサーバーのデータを使用し、各APIサーバーには多くのリソースがあるとしたら、何が起こるのか？　管理が非常に複雑にならないんじゃない？
+しかし、プロジェクトが少し大きくなると、各APIポートでより多くのロジックを書くことになるので、コードが長くて、メンテナンスが難しくなります。
+この問題を解決するため、解決を探して以下のように書いた。
 
 ## 問題解決
 上記の問題を解決するため、APIというクラスを作成して、柔軟にHTTP通信の管理を支援する。
-```
-class API {
-    constructor (axios) {
-        this.axios = axios
-        this.endpoints = {}
-    }
-
-    createEntity (entity) {
-        // コード
-    }
-}
-```
-APIクラスの各インスタンスは、特定のAPIサーバー用だ。  	
-多分、アプリケーションは異なるAPIを使用し、各APIサーバーには多くのリソースがある。
-たとえば、以下のAPIを使用しよう。
-- Restfulの偽のAPIデータ： https://jsonplaceholder.typicode.com/  
-    リソース：
-    - posts
-    - albums
-    - photos
-    - todos
-    - users
-
-- 世の中の国と地域のデータ：　https://restcountries.eu/rest/v2/  
-    リソース：
-    - all
-    - languages
-    - currencies
-    - capitals
-    - ...
-
-APIクラスが既に実装されている場合は、以下のように世界のすべての国または地域のデータを取得するよう求めるリクエストを実行する。
-```
-const jphPath = 'https://jsonplaceholder.typicode.com/'
-const restcountriesPath = 'https://restcountries.eu/rest/v2/'
-
-const jphAxios = axios.create({
-  baseURL: jphPath
-})
-const restcountriesAxios = axios.create({
-  baseURL: restcountriesPath
-})
-
-const jphApi = new API(jphAxios)
-const restcountriesApi = new API(restcountriesAxios)
-
-countries = restcountriesApi.createEntity({ name: 'all' })
-countries.getAll()
-    .then(function (response) {
-        // 成功時にデータを処理する
-        console.log(response)
-    })
-    .catch(function (error) {
-        // ハンドルエラー
-        console.log(error)
-    })
-    .then(function () {
-        // 常に実行される
-    })
-```
-
-今から、クラスAPIを実装しよう。
 ```
 class API {
     constructor (axios) {
@@ -165,6 +103,33 @@ class API {
 }
 ```
 
+```
+import axios from 'axios'
+
+// Axiosのインスタンスを作成する
+const myAxios = axios.create({
+    baseURL: 'https://some-domain.com/api/',
+    timeout: 1000,
+    headers: {'X-Custom-Header': 'foobar'}
+})
+
+// APIのインスタンスとリソースのエンドポイントを作成する
+const myApi = new API(myAxios)
+const users = myApi.createEntity({ name: 'users' })
+const albums = myApi.createEntity({ name: 'albums' })
+
+// リクエストの実行する
+users.getAll({ id=12345 })
+    .then(response => { // 成功時にデータを処理する })
+    .catch(error => { // ハンドルエラー })
+    .then(_ => { // 常に実行される })
+
+albums.get({ id=12345 })
+    .then(response => { // 成功時にデータを処理する })
+    .catch(error => { // ハンドルエラー })
+    .then(_ => { // 常に実行される })
+```
+
 ## Vueのアプリケーションに統合する
 ### Vueの中にあるAxiosの表
 
@@ -194,7 +159,9 @@ project
     │          │   action.js
     │          │   mutation.js
 ```
-APIクラスを「api/API.js」に置く。
+
+- APIクラスを「api/API.js」に置く。
+
 ```
 // api/API.js
 
@@ -204,59 +171,48 @@ class API {
 
 export default API
 ```
-「api/apis.js」にAPIクラスのインスタンスを作成する。
-```
-//api/apis.js
 
+- 「api/apis.js」にAPIクラスのインスタンスを作成する。
+
+```
 import axios from 'axios'
-import API from './API'
 
-const jphPath = 'https://jsonplaceholder.typicode.com/'
-const restcountriesPath = 'https://restcountries.eu/rest/v2/'
-
-const jphAxios = axios.create({
-  baseURL: jphPath
-})
-const restcountriesAxios = axios.create({
-  baseURL: restcountriesPath
+const myAxios = axios.create({
+    baseURL: 'https://some-domain.com/api/',
+    timeout: 1000,
+    headers: {'X-Custom-Header': 'foobar'}
 })
 
-const jphApi = new API(jphAxios)
-const restcountriesApi = new API(restcountriesAxios)
-
-export const jphApi = new API(jphAxios)
-export const restcountriesApi = new API(restcountriesAxios)
+export myApi = new API(myAxios)
 ```
-たとえば、アプリケーションにはモジュールが2つある。  
-- AのモジュールにはRestfulの偽のAPIデータを使用。
-- Bのモジュールには世の中の国と地域のデータを使用。  
 
-「modules/moduleB/_api/index.js」に、リソースを作成する。
+- 「modules/moduleB/_api/index.js」に、リソースを作成する。
+
 ```
-// modules/moduleB/_api/index.js
+import { myApi } from '@/api/apis'
 
-import { restcountriesApi } from '@/api/apis'
+const userResource = 'users'
+myApi.createEntity({ name: userResource })
 
-const countryResource = 'all'
-restcountriesApi.createEntity({ name: countryResource })
-
-export const countries = restcountriesApi.endpoints[countryResource]
+export const users = myApi.endpoints[userResource]
 ```
+
 今、上記のリソースを使用してvueのアクションを作成できる。
-```
-import { countries } from '../_api/index'
 
-const getCountries = async context => {
+```
+import { users } from '../_api/index'
+
+const getUsers = async context => {
     try {
-        countriesData = await countries.getAll()
-        // Mutation commit
+        userData = await users.getAll()
+        // ミューテーションをコミットする
     } catch (err) { 
         // ハンドルエラー
     }
 }
 
 const actions = {
-    getCountries
+    getUsers
 }
 
 export default actions
@@ -264,7 +220,7 @@ export default actions
 
 # 結論
 - これから、Axiosによって、APIリクエストの管理を支援するAPIというクラスを作成の方法を理解してもらう。
-- プロジェクトが大きくなり、より多くのAPIサーバーを使用する必要がある場合は、「api/apis.js」に新しいAPIクラスのインスタンスを作成しよう。
+- プロジェクトが大きくなり、より多くのAPIポートを使用する必要がある場合は、「api/apis.js」に新しいAPIクラスのインスタンスを作成しよう。
 
 # デモ
 国の旗を推測のため小さいゲームのウェブアプリケーションを作成した。
@@ -274,7 +230,6 @@ export default actions
 - Github: [oembed https://github.com/SIlevanlinh/sint-knowledge-vue]
 
 # 参考文献
-- Vuejs https://vuejs.org/index.html
-- Vuex https://vuex.vuejs.org/
 - Axios https://github.com/axios/axios
-- 世界の国と地域のデータ API https://restcountries.eu/
+- Vuejs https://vuejs.org
+- Vuex https://vuex.vuejs.org
