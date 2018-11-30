@@ -3,9 +3,6 @@
 # 目的
 AxiosというライブラリVueのアプリケーションに統合の方法を理解してもらう。
 
-# 目標
-APIのサーバーに要求を出して、データを取得するため、Axiosによって、APIクラスを作成する。
-
 # Axiosとは？
 フロントエンドでは非同期処理に関する作業を行う場合はよく使われる純粋なJavascriptの「Fetch」という関数を使用する。しかし、Axiosという素晴らしいサードパーティのライブラリがあり、私たちがその作業をはるかに簡単にするのに役立つ。
 
@@ -20,17 +17,17 @@ Axiosは、HTTP通信を簡単に行うことができるJavascriptライブラ�
 
 AxiosのGithub: [oembed https://github.com/axios/axios]
 
-# Axiosの基本的な使い方
+# Axiosの使い方
+例えば、以下のAPIポートをアクセをして、ユーザーとそのアルバムのデータを取得したい。
+APIポート： https://some-domain.com/api/  
+リソース： users, albums
+
 ## インストール
 ```
 npm install axios
 ```
 
-## 使い方
-例えば、以下のAPIポートをアクセをして、ユーザーとそのアルバムのデータを取得したい。
-APIポート： https://some-domain.com/api/  
-リソース： users, albums
-
+## Axiosの基本的な使い方
 ```
 import axios from 'axios'
 
@@ -61,7 +58,8 @@ myAxios.get('/albums?id=12345')
 この問題を解決するため、解決を探して以下のように書いた。
 
 ## 問題解決
-上記の問題を解決するため、APIというクラスを作成して、柔軟にHTTP通信の管理を支援する。
+- 上記の問題を解決するため、APIというクラスを作成して、柔軟にHTTP通信の管理を支援する。
+
 ```
 class API {
     constructor (axios) {
@@ -103,6 +101,8 @@ class API {
 }
 ```
 
+- APIクラスの使い方
+
 ```
 import axios from 'axios'
 
@@ -132,9 +132,9 @@ albums.get({ id=12345 })
 
 ## Vueのアプリケーションに統合する
 ### Vueの中にあるAxiosの表
-
+![Vueの中にあるAxiosの表](/knowledge/open.file/download?fileNo=1156)
 ### 統合プロセス
-私はアプリケーションをモジュールに分ける。
+Vueのアプリケーションをモジュールに分ける。
 各モジュールはアプリケーションの機能を担当する。
 ```
 project
@@ -163,8 +163,6 @@ project
 - APIクラスを「api/API.js」に置く。
 
 ```
-// api/API.js
-
 class API {
     // コード
 }
@@ -192,15 +190,18 @@ export myApi = new API(myAxios)
 import { myApi } from '@/api/apis'
 
 const userResource = 'users'
+const albumResource = 'albums'
 myApi.createEntity({ name: userResource })
+myApi.createEntity({ name: albumResource })
 
 export const users = myApi.endpoints[userResource]
+export const albums = myApi.endpoints[albumResource]
 ```
 
-今、上記のリソースを使用してvueのアクションを作成できる。
+- 今、上記のリソースを使用してvueのアクションを作成できる。
 
 ```
-import { users } from '../_api/index'
+import { users, albums } from '../_api/index'
 
 const getUsers = async context => {
     try {
@@ -211,8 +212,18 @@ const getUsers = async context => {
     }
 }
 
+const getAlbums = async context => {
+    try {
+        albumData = await albums.getAll()
+        // ミューテーションをコミットする
+    } catch (err) { 
+        // ハンドルエラー
+    }
+}
+
 const actions = {
-    getUsers
+    getUsers,
+    getAlbums
 }
 
 export default actions
