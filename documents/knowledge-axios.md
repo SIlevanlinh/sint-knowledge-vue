@@ -7,7 +7,7 @@ AxiosというライブラリVueのアプリケーションに統合の方法を
 フロントエンドでは非同期処理に関する作業を行う場合はよく使われる純粋なJavascriptの「Fetch」という関数を使用する。しかし、Axiosという素晴らしいサードパーティのライブラリがあり、私たちがその作業をはるかに簡単にするのに役立つ。
 
 ## Axiosの定義
-Axiosは、HTTP通信を簡単に行うことができるJavascriptライブラリです。フロントエンドばかりでなく、Node.JSでも利用できます。Axiosの特徴して以下のような点が挙げられる。
+Axiosは、HTTP通信を簡単に行うことができるJavascriptライブラリです。フロントエンドばかりでなく、Node.JS でも利用できます。Axiosの特徴して以下のような点が挙げられる。
 
 ## Axiosの特徴
 - XML HttpReqestを簡単に生成できる
@@ -51,10 +51,10 @@ myAxios.get('/albums?id=12345')
 ```
 
 ## Axiosを基本的に使用の問題
-上記のように各API呼び出しのためのハンドルを書く必要がある。
-アプリケーションが小さい場合は、それは大きな問題ではない。
+上記のように各API呼び出しのためのハンドルを書く必要がある。アプリケーションが小さい場合は、それは大きな問題ではない。
 
 しかし、プロジェクトが少し大きくなると、各APIポートでより多くのロジックを書くことになるので、コードが長くて、メンテナンスが難しくなります。
+
 この問題を解決するため、解決を探して以下のように書いた。
 
 ## 問題解決
@@ -134,8 +134,7 @@ albums.get({ id=12345 })
 ### Vueの中にあるAxiosの表
 ![Vueの中にあるAxiosの表](/knowledge/open.file/download?fileNo=1156)
 ### 統合プロセス
-Vueのアプリケーションをモジュールに分ける。
-各モジュールはアプリケーションの機能を担当する。
+Vueのアプリケーションをモジュールに分ける。各モジュールはアプリケーションの機能を担当する。
 ```
 project
 │
@@ -198,7 +197,7 @@ export const users = myApi.endpoints[userResource]
 export const albums = myApi.endpoints[albumResource]
 ```
 
-- 今、上記のリソースを使用してvueのアクションを作成できる。
+- 「modules/moduleB/_store/action.js」に、上記のリソースを使用してvueのアクションを作成できる。
 
 ```
 import { users, albums } from '../_api/index'
@@ -234,8 +233,7 @@ export default actions
 - プロジェクトが大きくなり、より多くのAPIポートを使用する必要がある場合は、「api/apis.js」に新しいAPIクラスのインスタンスを作成しよう。
 
 # デモ
-国の旗を推測のため小さいゲームのウェブアプリケーションを作成した。
-アプリケーションには上記のAxiosによるAPIクラスを使って、「[oembed https://restcountries.eu/rest/v2/]」というAPIの世の中の国と地域のデータを取得した。
+国の旗を推測のため小さいゲームのウェブアプリケーションを作成した。アプリケーションには上記のAxiosによるAPIクラスを使って、「[oembed https://restcountries.eu/rest/v2/]」というAPIの世の中の国と地域のデータを取得した。
 - ライブデモ: [oembed https://flag.surge.sh]
 ![flag game screenshot](/knowledge/open.file/download?fileNo=1102)
 - Github: [oembed https://github.com/SIlevanlinh/sint-knowledge-vue]
