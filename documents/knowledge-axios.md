@@ -3,22 +3,22 @@
 # 目的
 AxiosというライブラリVueのアプリケーションに統合の方法を理解してもらう。
 
-# Axiosとは？
+# Axiosについて
 フロントエンドでは非同期処理に関する作業を行う場合はよく使われる純粋なJavascriptの「Fetch」という関数を使用する。しかし、Axiosという素晴らしいサードパーティのライブラリがあり、私たちがその作業をはるかに簡単にするのに役立つ。
 
-## Axiosの定義
+## Axiosとは？
 Axiosは、HTTP通信を簡単に行うことができるJavascriptライブラリです。フロントエンドばかりでなく、Node.JS でも利用できます。Axiosの特徴して以下のような点が挙げられる。
 
 ## Axiosの特徴
-- XML HttpReqestを簡単に生成できる
-- Promiseベースである。Promiseとは非同期の処理をいい感じに使えるAPIパターンである。
+- XML HttpRequestを簡単に生成できる
+- Promiseベースである。Mozillaによると、Promiseオブジェクトは非同期処理の最終的な完了処理（もしくは失敗）およびその結果の値を表現する。
 - カスタムヘッダーやBasic認証など、いろいろなオプションが手軽にできる。
 - 内蔵XSRF保護
 
 AxiosのGithub: [oembed https://github.com/axios/axios]
 
 # Axiosの使い方
-例えば、以下のAPIポートをアクセをして、ユーザーとそのアルバムのデータを取得したい。
+例えば、以下のAPIポートをアクセをして、ユーザーとそのアルバムのデータを取得したい。  
 APIポート： https://some-domain.com/api/  
 リソース： users, albums
 
@@ -228,7 +228,7 @@ const actions = {
 export default actions
 ```
 
-# 結論
+# まとめ
 - これから、Axiosによって、APIリクエストの管理を支援するAPIというクラスを作成の方法を理解してもらう。
 - プロジェクトが大きくなり、より多くのAPIポートを使用する必要がある場合は、「api/apis.js」に新しいAPIクラスのインスタンスを作成しよう。
 
