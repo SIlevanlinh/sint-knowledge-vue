@@ -1,4 +1,4 @@
-# 【VueJS】AxiosによるAPI通信共通化。
+# 【VueJS】AxiosによるAPI通信共通化
 
 # 目的
 AxiosというライブラリVueのアプリケーションに統合の方法を理解してもらう。
@@ -7,7 +7,8 @@ AxiosというライブラリVueのアプリケーションに統合の方法を
 フロントエンドでは非同期処理に関する作業を行う場合はよく使われる純粋なJavascriptの「Fetch」という関数を使用する。しかし、Axiosという素晴らしいサードパーティのライブラリがあり、私たちがその作業をはるかに簡単にするのに役立つ。
 
 ## Axiosとは？
-Axiosは、HTTP通信を簡単に行うことができるJavascriptライブラリである。フロントエンドばかりでなく、Node.JS でも利用できる。Axiosの特徴して以下のような点が挙げられる。
+Axiosは、HTTP通信を簡単に行うことができるJavascriptライブラリである。フロントエンドばかりでなく、Node.JS でも利用できる。
+<span style="color:red">「フロントエンドばかりでなく、Node.JS でも利用できる。」はどういう意味か </span>
 
 ## Axiosの特徴
 - XML HttpRequestを簡単に生成できる
@@ -18,8 +19,9 @@ Axiosは、HTTP通信を簡単に行うことができるJavascriptライブラ�
 AxiosのGithub: [oembed https://github.com/axios/axios]
 
 # Axiosの使い方
-例えば、以下のAPIポートをアクセをして、ユーザーとそのアルバムのデータを取得したい。  
-APIポート： https://some-domain.com/api/  
+例として、APIにアクセスしてユーザとアルバム情報を取得するコードを記載します。
+
+Url（ダミーです）： https://some-domain.com/api/  
 リソース： users, albums
 
 ## インストール
@@ -50,10 +52,8 @@ myAxios.get('/albums?id=12345')
     .then(_ => { // 常に実行される })
 ```
 
-## Axiosを基本的に使用の問題
-上記のように各API呼び出しのためのハンドルを書く必要がある。アプリケーションが小さい場合は、それは大きな問題ではない。
-
-しかし、プロジェクトが少し大きくなると、各APIポートでより多くのロジックを書くことになるので、コードが長くて、メンテナンスが難しくなる。
+## Axiosの基本的な使い方の問題
+基本的な使い方でプログラムする場合、リソース（users, albums）ごとにハンドルを書く必要がある。アプリケーションが小さい場合は、それは大きな問題ではないが、プロジェクトが少し大きくなると、各APIポートでより多くのロジックを書くことになるので、コードが長くて、メンテナンスが難しくなる。
 
 この問題を解決するため、解決を探して以下のように書いた。
 
@@ -130,7 +130,12 @@ albums.get({ id=12345 })
     .then(_ => { // 常に実行される })
 ```
 
+
 ## Vueのアプリケーションに統合する
+<span style="color:red">Block ở trên và dưới không liên kết với nhau.
+thêm vài dòng vào dẫn người đọc để họ hiểu là mình đang làm gì.
+</span>
+
 ### Vueの中にあるAxiosの表
 ![Vueの中にあるAxiosの表](/knowledge/open.file/download?fileNo=1156)
 ### 統合プロセス
@@ -229,16 +234,20 @@ export default actions
 ```
 
 # まとめ
+<span style="color:red"> suy nghĩ thêm chút cho cái kết thúc bài.</span>
+
 - これから、Axiosによって、APIリクエストの管理を支援するAPIというクラスを作成の方法を理解してもらう。
 - プロジェクトが大きくなり、より多くのAPIポートを使用する必要がある場合は、「api/apis.js」に新しいAPIクラスのインスタンスを作成しよう。
 
 # デモ
-国の旗を推測のため小さいゲームのウェブアプリケーションを作成した。アプリケーションには上記のAxiosによるAPIクラスを使って、「[oembed https://restcountries.eu/rest/v2/]」というAPIの世の中の国と地域のデータを取得した。
-- ライブデモ: [oembed https://flag.surge.sh]
+全世界の国々の国旗を当てるクイズウェブアプリケーションを作成した。アプリケーションには上記のAxiosによるAPIクラスを使って、[REST Countries](https://restcountries.eu)というAPIにアクセスし世の中の国と地域の情報を取得している。
+
+- ライブ: [oembed https://flag.surge.sh]
 ![flag game screenshot](/knowledge/open.file/download?fileNo=1102)
+
 - Github: [oembed https://github.com/SIlevanlinh/sint-knowledge-vue]
 
-# 参考文献
+# 参考
 - Axios https://github.com/axios/axios
 - Vuejs https://vuejs.org
 - Vuex https://vuex.vuejs.org
