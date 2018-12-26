@@ -8,7 +8,6 @@ AxiosというライブラリVueのアプリケーションに統合の方法を
 
 ## Axiosとは？
 Axiosは、HTTP通信を簡単に行うことができるJavascriptライブラリである。フロントエンドばかりでなく、Node.JS でも利用できる。
-<span style="color:red">「フロントエンドばかりでなく、Node.JS でも利用できる。」はどういう意味か </span>
 
 ## Axiosの特徴
 - XML HttpRequestを簡単に生成できる
@@ -19,9 +18,9 @@ Axiosは、HTTP通信を簡単に行うことができるJavascriptライブラ�
 AxiosのGithub: [oembed https://github.com/axios/axios]
 
 # Axiosの使い方
-例として、APIにアクセスしてユーザとアルバム情報を取得するコードを記載します。
+例として、APIにアクセスしてユーザとアルバム情報を取得するコードを記載する。
 
-Url（ダミーです）： https://some-domain.com/api/  
+Url（ダミー）： https://some-domain.com/api/  
 リソース： users, albums
 
 ## インストール
@@ -132,9 +131,7 @@ albums.get({ id=12345 })
 
 
 ## Vueのアプリケーションに統合する
-<span style="color:red">Block ở trên và dưới không liên kết với nhau.
-thêm vài dòng vào dẫn người đọc để họ hiểu là mình đang làm gì.
-</span>
+では、上記のAPIクラスをVueアプリケーションに統合する方法は？ 行こう！
 
 ### Vueの中にあるAxiosの表
 ![Vueの中にあるAxiosの表](/knowledge/open.file/download?fileNo=1156)
@@ -234,10 +231,11 @@ export default actions
 ```
 
 # まとめ
-<span style="color:red"> suy nghĩ thêm chút cho cái kết thúc bài.</span>
 
 - これから、Axiosによって、APIリクエストの管理を支援するAPIというクラスを作成の方法を理解してもらう。
 - プロジェクトが大きくなり、より多くのAPIポートを使用する必要がある場合は、「api/apis.js」に新しいAPIクラスのインスタンスを作成しよう。
+
+プログラミングのし方を少し変更するだけで、多くの労力を節約でき、コードをより管理しやすくなる。
 
 # デモ
 全世界の国々の国旗を当てるクイズウェブアプリケーションを作成した。アプリケーションには上記のAxiosによるAPIクラスを使って、[REST Countries](https://restcountries.eu)というAPIにアクセスし世の中の国と地域の情報を取得している。
