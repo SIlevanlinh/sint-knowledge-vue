@@ -12,7 +12,7 @@ NPMというNode.jsのモジュールを管理するツールによって、プ�
 npm install vue-i18n
 ```
 # 使い方
-main.jsと同じレベルにlangという名前のディレクトリを作成します。
+main.jsと同じレベルにlangという名前のディレクトリを作成する。
 ```
 project-name
 │
@@ -71,8 +71,9 @@ export default i18n
 ```
 
 langのindex.js からちょっと前に作成したVueI18nのインスタンスをインポートし、Vueクラスのインスタンスを初期化するときにパラメータとして使用する。  
-main.js
 ```
+// index.js
+
 import Vue from 'vue'
 import App from './App.vue'
 import i18n from './lang'
@@ -82,9 +83,11 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 ```
-
-App.vue
+vueコンポーネントで、ロケールデータを取得するために$ t変数を使用する。  
+ロケールを選択したい場合は、選択ボックスを作成し、v-modelを使用して $i18n.localeにオプションをバインドする。  
 ```
+// App.vue
+
 <template>
   <div id="app">
     <h1>{{ $t("message.title") }}</h1>
@@ -97,7 +100,7 @@ App.vue
 ```
 
 # まとめ
-
+Vue-I18nおかげで簡単に多言語対応できる。以下は私が作成した英語と日本語をサポートする小さなアプリケーションです。Vue-I18nを使用した。
 
 # デモ
 - ライブ: [oembed https://flag.surge.sh]
